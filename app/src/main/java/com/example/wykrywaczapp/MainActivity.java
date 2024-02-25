@@ -21,6 +21,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
@@ -34,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
     private MapView map = null;
     Button locationBut;
     Button findBut;
+    GeoPoint findingPoint;
+    boolean anotherPoint = false;
+    RoutesFinding routesFinding;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -101,7 +105,12 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
             @Override
             public void onClick(View v)
             {
-                RoutesFinding routesFinding = new RoutesFinding(map, utilities.getLocation(), getApplicationContext());
+                if (!anotherPoint)
+                {
+                    findingPoint = utilities.getLocation();
+                }
+
+                routesFinding = new RoutesFinding(map, findingPoint, getApplicationContext());
                 routesFinding.findRoutes();
             }
         });
@@ -176,6 +185,13 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
     public boolean longPressHelper(GeoPoint p)
     {
         Toast.makeText(getApplicationContext(), "longTap", Toast.LENGTH_SHORT).show();
+        Marker startMarker = new Marker(map);
+        startMarker.setPosition(p);
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        map.getOverlays().add(startMarker);
+        anotherPoint = true;
+        findingPoint = p;
+
         return true;
     }
 }
