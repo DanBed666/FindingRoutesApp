@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
 {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private MapView map = null;
+    Button locationBut;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -64,11 +67,27 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
         map.setBuiltInZoomControls(true);
         map.setMultiTouchControls(true);
 
-        setLocation();
-        setCompass();
+        Utilities utilities = new Utilities(map, getApplicationContext());
+
+        //Show user location
+        utilities.setLocation();
+
+        //Show compass
+        utilities.setCompass();
 
         MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(this);
         map.getOverlays().add(mapEventsOverlay);
+
+        locationBut = findViewById(R.id.btn_loc);
+
+        locationBut.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                utilities.zoomToLoc();
+            }
+        });
     }
 
     @Override
@@ -129,22 +148,6 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
                     REQUEST_PERMISSIONS_REQUEST_CODE);
         }
     }
-
-    public void setLocation()
-    {
-        MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(getApplicationContext()),map);
-        mLocationOverlay.enableFollowLocation();
-        map.getOverlays().add(mLocationOverlay);
-        map.getController().setZoom(18.0);
-    }
-
-    public void setCompass()
-    {
-        CompassOverlay mCompassOverlay = new CompassOverlay(getApplicationContext(), new InternalCompassOrientationProvider(getApplicationContext()), map);
-        mCompassOverlay.enableCompass();
-        map.getOverlays().add(mCompassOverlay);
-    }
-
     @Override
     public boolean singleTapConfirmedHelper(GeoPoint p)
     {
