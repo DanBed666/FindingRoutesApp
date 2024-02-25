@@ -4,7 +4,9 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -31,11 +33,15 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private MapView map = null;
     Button locationBut;
+    Button findBut;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         //handle permissions first, before map is created. not depicted here
 
@@ -86,6 +92,17 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
             public void onClick(View v)
             {
                 utilities.zoomToLoc();
+            }
+        });
+
+        findBut = findViewById(R.id.btn_find);
+        findBut.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                RoutesFinding routesFinding = new RoutesFinding(map, utilities.getLocation(), getApplicationContext());
+                routesFinding.findRoutes();
             }
         });
     }

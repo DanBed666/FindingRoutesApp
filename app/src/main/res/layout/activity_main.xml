@@ -18,4 +18,13 @@
         app:cornerRadius="0dp"
         android:text="LOC"/>
 
+    <Button
+        android:id="@+id/btn_find"
+        android:layout_width="75dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        app:cornerRadius="0dp"
+        android:text="FND"/>
+
 </RelativeLayout>

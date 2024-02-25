@@ -1,6 +1,7 @@
 package com.example.wykrywaczapp;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -39,5 +40,10 @@ public class Utilities
         GeoPoint location = mLocationOverlay.getMyLocation();
         map.getController().setCenter(location);
         map.getController().setZoom(18.0);
+    }
+
+    public GeoPoint getLocation()
+    {
+        return mLocationOverlay.getMyLocation();
     }
 }
