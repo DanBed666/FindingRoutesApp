@@ -27,4 +27,10 @@
         app:cornerRadius="0dp"
         android:text="FND"/>
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view"
+        android:layout_width="420dp"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true" />
+
 </RelativeLayout>

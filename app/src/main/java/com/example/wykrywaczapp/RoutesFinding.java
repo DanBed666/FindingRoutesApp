@@ -15,11 +15,12 @@ public class RoutesFinding
     MapView map;
     GeoPoint location;
     Context context;
-    public RoutesFinding(MapView m, GeoPoint loc, Context c)
+    FragmentInterface listener;
+    public RoutesFinding(MapView m, GeoPoint loc, FragmentInterface lis)
     {
         map = m;
         location = loc;
-        context = c;
+        listener = lis;
     }
     public void findRoutes()
     {
@@ -29,10 +30,11 @@ public class RoutesFinding
         String url = overpassAPIProvider.urlForTagSearchKml("route=hiking", range, 500, 30);
         KmlDocument kmlDocument = new KmlDocument();
         boolean ok = overpassAPIProvider.addInKmlFolder(kmlDocument.mKmlRoot, url);
+        RouteStyler routeStyler = new RouteStyler(listener);
 
         if (ok)
         {
-            FolderOverlay folderOverlay = (FolderOverlay) kmlDocument.mKmlRoot.buildOverlay(map, null, null, kmlDocument);
+            FolderOverlay folderOverlay = (FolderOverlay) kmlDocument.mKmlRoot.buildOverlay(map, null, routeStyler, kmlDocument);
             map.getOverlays().add(folderOverlay);
         }
         else

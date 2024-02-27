@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapEventsReceiver;
@@ -22,10 +22,6 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.compass.CompassOverlay;
-import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 
@@ -100,6 +96,16 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
         });
 
         findBut = findViewById(R.id.btn_find);
+
+        FragmentInterface listener = new FragmentInterface()
+        {
+            @Override
+            public FragmentManager getSupportFM()
+            {
+                return getSupportFragmentManager();
+            }
+        };
+
         findBut.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -110,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
                     findingPoint = utilities.getLocation();
                 }
 
-                routesFinding = new RoutesFinding(map, findingPoint, getApplicationContext());
+                routesFinding = new RoutesFinding(map, findingPoint, listener);
                 routesFinding.findRoutes();
             }
         });
